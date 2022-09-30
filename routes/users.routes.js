@@ -13,6 +13,7 @@ const {
 
 // Middlewares
 const { userExists } = require("../middlewares/users.middlewares");
+const {orderExists} = require('../middlewares/orders.middlewares')
 const {
   protectSession,
   protectUsersAccount,
@@ -39,6 +40,6 @@ usersRouter.delete("/:id", userExists, protectUsersAccount, deleteUser);
 
 usersRouter.get("/orders", getAllOrders);
 
-usersRouter.get("/orders/:id", getOrderById);
+usersRouter.get("/orders/:id", orderExists, getOrderById);
 
 module.exports = { usersRouter };

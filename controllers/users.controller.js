@@ -4,7 +4,8 @@ const dotenv = require("dotenv");
 
 // Models
 const { User } = require("../models/user.model");
-const { Product } = require('../models/product.model')
+const { Product } = require("../models/product.model");
+const { Order } = require("../models/order.model");
 
 // Utils
 const { catchAsync } = require("../utils/catchAsync.util");
@@ -74,16 +75,16 @@ const login = catchAsync(async (req, res, next) => {
   });
 });
 
-//todo =========== Get User Proudcts /me =========
+//* =========== Get User Proudcts /me =========
 const getProductUser = catchAsync(async (req, res, next) => {
-	const { sessionUser } = req;
+  const { sessionUser } = req;
 
-	const products = await Product.findAll({ where: { userId: sessionUser.id}})
+  const products = await Product.findAll({ where: { userId: sessionUser.id } });
 
-	res.status(200).json({
-		status: 'succes',
-		data: { products }
-	})
+  res.status(200).json({
+    status: "succes",
+    data: { products },
+  });
 });
 
 //* =========== Update profile the user /:id =========
@@ -108,16 +109,27 @@ const deleteUser = catchAsync(async (req, res, next) => {
   res.status(204).json({ status: "success" });
 });
 
-//todo =========== Get all orders of the user /orders =========
+//* =========== Get all orders of the user /orders =========
 const getAllOrders = catchAsync(async (req, res, next) => {
-	const { sessionUser } = req;
+  const { sessionUser } = req;
 
+  const orders = await Order.findAll({ where: { userId: sessionUser.id } });
 
-
+  res.status(200).json({
+    status: "success",
+    data: { orders },
+  });
 });
 
-//todo =========== Get order by Id /orders/:id =========
-const getOrderById = catchAsync(async (req, res, next) => {});
+//* =========== Get order by Id /orders/:id =========
+const getOrderById = catchAsync(async (req, res, next) => {
+  const { orders } = req;
+
+  res.status(200).json({
+    status: "success",
+    data: { orders },
+  });
+});
 
 module.exports = {
   createUser,
