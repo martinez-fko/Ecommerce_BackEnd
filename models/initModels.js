@@ -17,13 +17,13 @@ const initModels = () => {
   Cart.hasOne(Order, { foreignKey: "cartId" });
   Order.belongsTo(Cart);
 
-  User.hasMany(Product, { foreignKey: " userId" });
+  User.hasMany(Product, { foreignKey: "userId" });
   Product.belongsTo(User);
-
-  Category.hasMany(Product, { foreignKey: " categoryId" });
+  
+  Category.hasMany(Product, { foreignKey: "categoryId" });
   Product.belongsTo(Category);
 
-  Product.hasMany(ProductImg, { foreignKey: " productId" });
+  Product.hasMany(ProductImg, { foreignKey: "productId" });
   ProductImg.belongsTo(Product);
 
   Cart.hasMany(ProductInCart, { foreignKey: "cartId" });
