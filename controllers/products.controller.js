@@ -19,22 +19,29 @@ const createProduct = catchAsync(async (req, res, next) => {
     categoryId,
     userId: sessionUser.id,
   });
+
   res.status(201).json({
     status: "createProduct",
     data: { newProduct },
   });
 });
 
+//* =========== Get All Products =========
 const getAllProducts = catchAsync(async (req, res, next) => {
+  const products = await Product.findAll({ where: { status: "active" } });
   res.status(200).json({
     status: "getAllProducts",
+    data: { products },
   });
 });
+
+//* ===========  Get Product by Id =========
 const getProductById = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "getProductById",
   });
 });
+
 const updateProduct = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "updateProduct",
@@ -71,15 +78,24 @@ const createCategory = catchAsync(async (req, res, next) => {
 //* =========== Update Category =========
 const updateCategory = catchAsync(async (req, res, next) => {
   const { category } = req;
+  const { name } = req.body;
+
+  await category.update({ name });
 
   res.status(200).json({
-    status: "updateCategory",
+    status: "success",
     data: { category },
   });
 });
+
+//* =========== Delete Category =========
 const deleteCategory = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    status: "deleteCategory",
+  const { category } = req;
+
+  await category.update({ status: "deleted" });
+
+  res.status(204).json({
+    status: "success",
   });
 });
 
