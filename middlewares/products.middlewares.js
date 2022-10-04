@@ -11,6 +11,7 @@ const productExists = catchAsync(async (req, res, next) => {
 
   const product = await Product.findOne({
     where: { id, status: "active" },
+    include: { model: Category }
   });
 
   // If product doesn't exist, send error message

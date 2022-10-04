@@ -1,10 +1,10 @@
 // Models
-const { Product } = require("../models/product.model");
-const { Category } = require("../models/category.model");
+const { Product } = require('../models/product.model');
+const { Category } = require('../models/category.model');
 
 // Utils
-const { catchAsync } = require("../utils/catchAsync.util");
-const { AppError } = require("../utils/appError.util");
+const { catchAsync } = require('../utils/catchAsync.util');
+const { AppError } = require('../utils/appError.util');
 
 //* =========== Create new Product =========
 const createProduct = catchAsync(async (req, res, next) => {
@@ -21,44 +21,59 @@ const createProduct = catchAsync(async (req, res, next) => {
   });
 
   res.status(201).json({
-    status: "createProduct",
+    status: 'createProduct',
     data: { newProduct },
   });
 });
 
 //* =========== Get All Products =========
 const getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.findAll({ where: { status: "active" } });
+  const products = await Product.findAll({ where: { status: 'active' } });
   res.status(200).json({
-    status: "getAllProducts",
+    status: 'getAllProducts',
     data: { products },
   });
 });
 
 //* ===========  Get Product by Id =========
 const getProductById = catchAsync(async (req, res, next) => {
+  const { product } = req;
+
   res.status(200).json({
-    status: "getProductById",
+    status: 'getProductById',
+    data: { product },
   });
 });
 
+//* ========== Update Product =========
 const updateProduct = catchAsync(async (req, res, next) => {
+  const { title, description, price, quantity } = req.body;
+  const { product } = req;
+
+  await product.update({ title, description, price, quantity });
+
   res.status(200).json({
-    status: "updateProduct",
+    status: 'updateProduct',
+    data: { product },
   });
 });
+
+//* ========== Delete Product ========
 const deleteProduct = catchAsync(async (req, res, next) => {
+  const { product } = req;
+
+  await product.update({ status: 'deleted' });
   res.status(204).json({
-    status: "deleteProduct",
+    status: 'deleteProduct',
   });
 });
 
 //* =========== Get all Categories =========
 const getAllCategories = catchAsync(async (req, res, next) => {
-  const categories = await Category.findAll({ where: { status: "active" } });
+  const categories = await Category.findAll({ where: { status: 'active' } });
 
   res.status(200).json({
-    status: "getAllCategories",
+    status: 'getAllCategories',
     data: { categories },
   });
 });
@@ -70,7 +85,7 @@ const createCategory = catchAsync(async (req, res, next) => {
   const newCategory = await Category.create({ name });
 
   res.status(201).json({
-    status: "success",
+    status: 'success',
     data: { newCategory },
   });
 });
@@ -83,7 +98,7 @@ const updateCategory = catchAsync(async (req, res, next) => {
   await category.update({ name });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: { category },
   });
 });
@@ -92,10 +107,10 @@ const updateCategory = catchAsync(async (req, res, next) => {
 const deleteCategory = catchAsync(async (req, res, next) => {
   const { category } = req;
 
-  await category.update({ status: "deleted" });
+  await category.update({ status: 'deleted' });
 
   res.status(204).json({
-    status: "success",
+    status: 'success',
   });
 });
 
