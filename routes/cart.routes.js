@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 // Controllers
 const {
@@ -6,33 +6,23 @@ const {
   updateCart,
   deleteProductCart,
   purchaseCart,
-} = require('../controllers/carts.controllers');
+} = require("../controllers/carts.controllers");
 
 // auth
-const { protectSession } = require('../middlewares/auth.middlewares');
+const { protectSession } = require("../middlewares/auth.middlewares");
 
-// Middleware
-const {
-  cartExists,
-  productInCartExists,
-} = require('../middlewares/cart.middlewares');
 
 const cartRouter = express.Router();
 
 // Protecting below endpoints
 cartRouter.use(protectSession);
 
-cartRouter.post(
-  '/add-product',
-  cartExists,
-  productInCartExists,
-  addProductCart
-);
+cartRouter.post("/add-product", addProductCart);
 
-cartRouter.patch('/update-cart', updateCart);
+cartRouter.patch("/update-cart", updateCart);
 
-cartRouter.delete('/:productId', deleteProductCart);
+cartRouter.delete("/:productId", deleteProductCart);
 
-cartRouter.post('/purchase', purchaseCart);
+cartRouter.post("/purchase", purchaseCart);
 
 module.exports = { cartRouter };

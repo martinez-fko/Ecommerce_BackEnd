@@ -6,6 +6,9 @@ const dotenv = require("dotenv");
 const { User } = require("../models/user.model");
 const { Product } = require("../models/product.model");
 const { Order } = require("../models/order.model");
+const { Category } = require("../models/category.model");
+const { Cart } = require("../models/cart.model");
+const { ProductInCart } = require("../models/productInCart.model");
 
 // Utils
 const { catchAsync } = require("../utils/catchAsync.util");
@@ -79,7 +82,10 @@ const login = catchAsync(async (req, res, next) => {
 const getProductUser = catchAsync(async (req, res, next) => {
   const { sessionUser } = req;
 
-  const products = await Product.findAll({ where: { userId: sessionUser.id } });
+  const products = await Product.findAll({
+    where: { userId: sessionUser.id },
+    include: { model: Category },
+  });
 
   res.status(200).json({
     status: "succes",
@@ -113,7 +119,10 @@ const deleteUser = catchAsync(async (req, res, next) => {
 const getAllOrders = catchAsync(async (req, res, next) => {
   const { sessionUser } = req;
 
-  const orders = await Order.findAll({ where: { userId: sessionUser.id } });
+  const orders = await Order.findAll({
+    where: { userId: sessionUser.id },
+    include: { model: Cart, include: { model: ProductInCart , include : { model: Product} } },
+  });
 
   res.status(200).json({
     status: "success",
