@@ -1,20 +1,22 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
 // Models
-const { User } = require("../models/user.model");
-const { Product } = require("../models/product.model");
-const { Order } = require("../models/order.model");
-const { Category } = require("../models/category.model");
-const { Cart } = require("../models/cart.model");
-const { ProductInCart } = require("../models/productInCart.model");
+const { User } = require('../models/user.model');
+const { Product } = require('../models/product.model');
+const { Order } = require('../models/order.model');
+const { Category } = require('../models/category.model');
+const { Cart } = require('../models/cart.model');
+const { ProductInCart } = require('../models/productInCart.model');
+const { ProductImg } = require('../models/productImg.model');
 
 // Utils
-const { catchAsync } = require("../utils/catchAsync.util");
-const { AppError } = require("../utils/appError.util");
+const { catchAsync } = require('../utils/catchAsync.util');
+const { AppError } = require('../utils/appError.util');
+const { getProductsImgsUrls } = require('../utils/firabase.util');
 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: './config.env' });
 
 // Gen random jwt signs
 // require('crypto').randomBytes(64).toString('hex') -> Enter into the node console and paste the command
@@ -23,8 +25,8 @@ dotenv.config({ path: "./config.env" });
 const createUser = catchAsync(async (req, res, next) => {
   const { username, email, password, role } = req.body;
 
-  if (role !== "admin" && role !== "normal") {
-    return next(new AppError("Invalid role", 400));
+  if (role !== 'admin' && role !== 'normal') {
+    return next(new AppError('Invalid role', 400));
   }
 
   // Encrypt the password
@@ -43,7 +45,7 @@ const createUser = catchAsync(async (req, res, next) => {
 
   // 201 -> Success and a resource has been created
   res.status(201).json({
-    status: "success",
+    status: 'success',
     data: { newUser },
   });
 });
@@ -55,13 +57,13 @@ const login = catchAsync(async (req, res, next) => {
 
   // Validate if the user exist with given email
   const user = await User.findOne({
-    where: { email, status: "active" },
+    where: { email, status: 'active' },
   });
 
   // Compare passwords (entered password vs db password)
   // If user doesn't exists or passwords doesn't match, send error
   if (!user || !(await bcrypt.compare(password, user.password))) {
-    return next(new AppError("Wrong credentials", 400));
+    return next(new AppError('Wrong credentials', 400));
   }
 
   // Remove password from response
@@ -69,11 +71,11 @@ const login = catchAsync(async (req, res, next) => {
 
   // Generate JWT (payload, secretOrPrivateKey, options)
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
+    expiresIn: '30d',
   });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: { user, token },
   });
 });
@@ -85,11 +87,14 @@ const getProductUser = catchAsync(async (req, res, next) => {
   const products = await Product.findAll({
     where: { userId: sessionUser.id },
     include: { model: Category },
+    include: { model: ProductImg },
   });
 
+  const productWithImgs = await getProductsImgsUrls(products);
+
   res.status(200).json({
-    status: "succes",
-    data: { products },
+    status: 'succes',
+    data: { productWithImgs },
   });
 });
 
@@ -101,7 +106,7 @@ const updateUser = catchAsync(async (req, res, next) => {
   await user.update({ username, email });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: { user },
   });
 });
@@ -110,9 +115,9 @@ const updateUser = catchAsync(async (req, res, next) => {
 const deleteUser = catchAsync(async (req, res, next) => {
   const { user } = req;
 
-  await user.update({ status: "deleted" });
+  await user.update({ status: 'deleted' });
 
-  res.status(204).json({ status: "success" });
+  res.status(204).json({ status: 'success' });
 });
 
 //* =========== Get all orders of the user /orders =========
@@ -121,11 +126,14 @@ const getAllOrders = catchAsync(async (req, res, next) => {
 
   const orders = await Order.findAll({
     where: { userId: sessionUser.id },
-    include: { model: Cart, include: { model: ProductInCart , include : { model: Product} } },
+    include: {
+      model: Cart,
+      include: { model: ProductInCart, include: { model: Product } },
+    },
   });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: { orders },
   });
 });
@@ -135,7 +143,7 @@ const getOrderById = catchAsync(async (req, res, next) => {
   const { orders } = req;
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: { orders },
   });
 });

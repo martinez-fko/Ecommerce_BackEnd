@@ -30,6 +30,9 @@ const {
   categoryExists,
 } = require('../middlewares/products.middlewares');
 
+// Utils
+const { upload } = require('../utils/multer.util');
+
 const productsRouter = express.Router();
 
 productsRouter.get('/categories', getAllCategories);
@@ -47,7 +50,7 @@ productsRouter.patch('/categories/:id', categoryExists, updateCategory);
 
 productsRouter.delete('/categories/:id', categoryExists, deleteCategory);
 
-productsRouter.post('/', createProductValidators, createProduct);
+productsRouter.post('/', upload.array('productImg', 5), createProductValidators, createProduct);
 
 productsRouter.patch(
   '/:id',

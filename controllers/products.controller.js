@@ -5,6 +5,7 @@ const { Category } = require('../models/category.model');
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util');
 const { AppError } = require('../utils/appError.util');
+const { uploadProductsImgs } = require('../utils/firabase.util');
 
 //* =========== Create new Product =========
 const createProduct = catchAsync(async (req, res, next) => {
@@ -19,6 +20,8 @@ const createProduct = catchAsync(async (req, res, next) => {
     categoryId,
     userId: sessionUser.id,
   });
+
+  await uploadProductsImgs(req.files, newProduct.id);
 
   res.status(201).json({
     status: 'createProduct',
