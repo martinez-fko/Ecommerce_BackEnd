@@ -24,7 +24,7 @@ const createProduct = catchAsync(async (req, res, next) => {
   await uploadProductsImgs(req.files, newProduct.id);
 
   res.status(201).json({
-    status: 'createProduct',
+    status: 'success',
     data: { newProduct },
   });
 });
@@ -33,7 +33,7 @@ const createProduct = catchAsync(async (req, res, next) => {
 const getAllProducts = catchAsync(async (req, res, next) => {
   const products = await Product.findAll({ where: { status: 'active' } });
   res.status(200).json({
-    status: 'getAllProducts',
+    status: 'success',
     data: { products },
   });
 });
@@ -43,7 +43,7 @@ const getProductById = catchAsync(async (req, res, next) => {
   const { product } = req;
 
   res.status(200).json({
-    status: 'getProductById',
+    status: 'success',
     data: { product },
   });
 });
@@ -56,7 +56,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
   await product.update({ title, description, price, quantity });
 
   res.status(200).json({
-    status: 'updateProduct',
+    status: 'success',
     data: { product },
   });
 });
@@ -67,7 +67,7 @@ const deleteProduct = catchAsync(async (req, res, next) => {
 
   await product.update({ status: 'deleted' });
   res.status(204).json({
-    status: 'deleteProduct',
+    status: 'success',
   });
 });
 
@@ -76,7 +76,7 @@ const getAllCategories = catchAsync(async (req, res, next) => {
   const categories = await Category.findAll({ where: { status: 'active' } });
 
   res.status(200).json({
-    status: 'getAllCategories',
+    status: 'success',
     data: { categories },
   });
 });

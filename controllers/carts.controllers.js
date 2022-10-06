@@ -50,7 +50,7 @@ const addProductCart = catchAsync(async (req, res, next) => {
   }
 
   res.status(200).json({
-    status: 'addProductCart',
+    status: 'success',
   });
 });
 
@@ -92,7 +92,7 @@ const updateCart = catchAsync(async (req, res, next) => {
   }
 
   res.status(200).json({
-    status: 'updateCart',
+    status: 'success',
   });
 });
 
@@ -124,7 +124,7 @@ const deleteProductCart = catchAsync(async (req, res, next) => {
   }
 
   res.status(200).json({
-    status: 'deleteProductCart',
+    status: 'success',
   });
 });
 
@@ -164,7 +164,7 @@ const purchaseCart = catchAsync(async (req, res, next) => {
   await cart.update({ status: 'purchased' });
 
   res.status(200).json({
-    status: 'purchaseCart',
+    status: 'success',
     data: { productsInCart },
   });
 });

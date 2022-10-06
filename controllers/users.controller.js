@@ -93,7 +93,7 @@ const getProductUser = catchAsync(async (req, res, next) => {
   const productWithImgs = await getProductsImgsUrls(products);
 
   res.status(200).json({
-    status: 'succes',
+    status: 'success',
     data: { productWithImgs },
   });
 });
