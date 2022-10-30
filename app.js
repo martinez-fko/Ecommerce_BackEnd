@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const cors = require('cors');
 
 // Routers
 const { usersRouter } = require('./routes/users.routes');
@@ -22,6 +23,8 @@ app.use(helmet());
 
 // Compress responses
 app.use(compression());
+
+app.use(cors());
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 else if (process.env.NODE_ENV === 'production') app.use(morgan('combined'));
